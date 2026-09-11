@@ -1,3 +1,6 @@
 [submodule "Trento3D"]
 	path = Trento3D
 	url = git@github.com:Duke-QCD/trento3d-2.0.git
+[submodule "CLVisc"]
+	path = CLVisc
+	url = https://github.com/iamSHAN98/CLVisc.git
