@@ -1,0 +1,91 @@
+
+[General]
+
+fPathOut = .
+
+
+[initial_condition]
+
+initial_type    = handcrafted
+Initial_profile = Initial.h5           ; Energy density, baryon density, velocity, ... 
+KFACTOR         = 1.0                  ; Overall normalization
+
+
+[hydrodynamics]
+
+TAU0 = 0.5                             ; Initial proper time
+
+NX = 151
+NY = 151
+NZ = 61
+
+DT = 0.1         
+DX = 0.2           
+DY = 0.2
+DZ = 0.2
+
+ntskip = 5                            ; Step skip for finding hypersurface : t, x, y, z
+nxskip = 2
+nyskip = 2
+nzskip = 2
+
+pimn_on         = yes                  ; Include shear viscosity
+CETA_YMIN       = 0.08                 ; Minimum eta/s
+CETA_XMIN       = 0.154                ; QCD transition temperature (Tc) when eta/s (T) is minimum
+CETA_LEFT_SLOP  = 0.0                  ; Slope of eta/s when T < Tc
+CETA_RIGHT_SLOP = 0.0                  ; Slope of eta/s when T >= Tc
+
+bulkpr_on  = no                        ; Include bulk pressure
+CZETA_duke = yes                       ; Temperature dependence of zeta/s
+CZETA      = 0.0                       ; Constant zeta/s
+
+baryon_on = no                         ; Switch on baryon current evolution
+qu_on     = no                         ; Switch on baryon diffusion current evolution
+CB_XMIN   = 0.0                        ; Temperature for minimum CB(T)
+
+source         = no                    ; Switch on source terms for dynamical initial condition
+save_hypersf   = yes                   ; Save hypersurface
+calc_vorticity = no                    ; Calculate vorticity
+save_bulkinfo  = no                    ; Save bulk information during evolution
+
+
+[EOS]
+
+eos_type   = hotqcd2014                ; Choices : ideal_gas, first_order, lattice_wb, hadron_gas
+switch_eos = hadron_gas                ; lattice_pce150, lattice_pce165, pure_gauge, hotqcd2014,
+                                       ; neosB, neosBQS, chiral, eosq, njl_model
+
+
+[freezeeout_and_afterburner]
+
+cornelius = yes
+corona    = yes                        ; Equal tau freeze-out at tau0
+
+Tfrz_on     = no                       ; False for freezeout at constant energy density
+Edfrz       = 0.4                      ; Freeze-out energy density
+TFRZ        = 0.155                    ; Freeze-out temperature
+sample_type = mc                       ; Choices : mc, mcgpu
+nsample     = 500
+
+run_afterbuner = yes
+afterburner    = SMASH                 ; Choices : SMASH, UrQMD (for PDG table)
+
+
+[coLBT_hydro]
+
+Colhydro    = no                       ; Swith for coupling LBT with hydro
+trans_model = LBT                      ; Transport model used
+LBT_config  = LBTinput.txt             ; Path to LBT configuration
+LBT_table   = readindatafile           ; Path to LBT table
+parton_dat  = parton_info.dat          ; Path to momentum information of initial partons
+jet_r_gw    = 0.2                      ; Gaussion weight along r in source deposition
+jet_eta_gw  = 0.2                      ; Gaussion weight along eta in source deposition
+Ecut        = 3                        ; Energy cut for themal parton to medium 
+
+
+[Test]
+LAM1 = -10 
+
+
+[opencl]
+local_workgroup_size = 64

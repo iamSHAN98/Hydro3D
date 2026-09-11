@@ -1,0 +1,22 @@
+---
+
+Logging :
+    default : INFO
+
+General :
+    Modus          : List
+    Time_Step_Mode : None
+    Delta_Time     : 0.1
+    End_Time       : 100
+    Randomseed     : -1
+    Nevents        : 500
+
+Output:
+    Output_Interval : 200
+    Particles :
+        Format : ["Oscar2013"]
+
+Modi:
+    List:
+        File_Directory : "."
+        Filename       : "mc_particle_list0"

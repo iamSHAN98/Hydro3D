@@ -1,0 +1,46 @@
+# System
+
+projectile = Au
+projectile = Au
+sqrts = 200
+
+# Collision
+
+number-events = 10
+b-min = 0.
+b-max = 20.
+
+# Source
+
+form-width = 0.88
+nucleon-width = 1.3
+nucleon-min-dist = 0.5
+constit-number = 16.4
+constit-width = 1.3
+
+# Profile
+
+overall-norm = 1
+reduced-thickness = 0
+flatness = 1.
+
+# Fragmentation
+
+fluctuation = 0.104
+kT-min = 0.33
+shape-alpha = 4.6
+shape-beta = 0.19
+mid-norm = 0.7
+mid-power = 0.5
+
+# Grid
+
+grid-max = 15.1
+grid-step = 0.2
+etasgrid-max = 6
+nsteps-etas = 61
+
+# Output
+
+quiet = true
+output = Initial.h5

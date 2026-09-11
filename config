@@ -1,0 +1,7 @@
+# Density Initialization (Trento3D)
+# Hydrodynamics (CLVisc)
+# Hadron Cascade (SMASH)
+
+Path/Ini input/input.trento
+Path/Evo input/input.hydro
+Path/Cas input/input.smash
