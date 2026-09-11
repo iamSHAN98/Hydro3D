@@ -4,3 +4,6 @@
 [submodule "CLVisc"]
 	path = CLVisc
 	url = https://github.com/iamSHAN98/CLVisc.git
+[submodule "SMASH"]
+	path = SMASH
+	url = https://github.com/smash-transport/smash.git
