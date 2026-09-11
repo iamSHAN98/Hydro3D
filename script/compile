@@ -1,0 +1,57 @@
+#!/usr/bin/bash
+
+maindir=$(pwd)
+objdir=$maindir/obj
+mkdir -p $objdir
+
+# Trento3D
+
+subdir=$maindir/Trento3D
+echo Compiling Trento3D
+
+cd $subdir && mkdir -p build && cd build
+cmake .. && make -j4
+cp src/trento-3 src/libtrento-3.so $objdir
+
+echo ''
+
+
+# CLVisc
+
+# Sampler
+subdir=$maindir/CLVisc/sampler
+echo Compiling Sampler
+
+cd $subdir && mkdir -p build && cd build
+cmake ../sampler_cpu && make -j4
+cp main $objdir/sampler
+
+# Cornelius
+subdir=$maindir/CLVisc/pyvisc/cornelius
+echo Compiling Cornelius
+
+cd $subdir
+make -j4 main
+cp main $objdir/cornelius
+
+echo ''
+
+
+# SMASH
+
+subdir=$maindir/SMASH
+echo Compiling SMASH
+
+cd $subdir && mkdir -p build && cd build
+cmake .. && make -j4
+cp smash src/libsmash.so $objdir
+
+
+# TreeMaker
+
+subdir=$maindir/TreeMaker
+echo Compiling TreeMaker
+
+cd $subdir && mkdir -p build && cd build
+cmake .. && make -j4
+cp maketree libTreeMaker_rdict.pcm libTreeMaker.so $objdir

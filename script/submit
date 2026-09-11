@@ -1,0 +1,110 @@
+#!/bin/bash
+
+
+# Parallelize
+function job() {
+  cd $1
+
+  casflag=$( cat input.hydro | grep run_afterbuner | cut -d "=" -f 2 )
+  nevt=$( cat input.hydro | grep nsample | cut -d "=" -f 2 )
+
+  # Initial : Trento3D
+  ./trento-3 -c input.trento &> event.log
+
+  # CLVisc + SMASH
+  ./ebe.py input.hydro $gpuid &>> event.log
+
+  # Create Tree
+  # Hydro
+  cat ParticleHydro-* >> ParticleHydro.oscar
+  ./maketree ParticleHydro.oscar Initial.root $nevt &>> convert.log
+  mkdir -p Hydro && mv Final-*.root Hydro
+
+  # Cascade
+  if [ $casflag == "yes" ]
+  then
+    cat ParticleCascade-* >> ParticleCascade.oscar
+    ./maketree ParticleCascade.oscar Initial.root $nevt &>> convert.log
+    mkdir -p Cascade && mv Final-*.root Cascade
+  fi
+
+  cd ..
+}
+
+
+# Options
+input="config"
+cores=1
+dir="output/job/run"
+out="output/data"
+
+export gpuid=0
+
+# Options : command line input
+while [ -n "$1" ]
+do
+  case "$1" in
+    --input) input="$2"
+             shift ;;
+    --cores) cores="$2"
+             shift ;;
+    --dir)   dir="output/job/$2"
+             shift ;;
+    --out)   out="$out/$2"
+             shift ;;
+    --gpu)   gpuid="$2"
+             shift ;;
+  esac
+  shift
+done
+
+
+# Prepare Directories
+for (( i=1; i<=$cores; i++ ))
+do
+  jobdir="$dir"_$i
+  mkdir -p $jobdir
+
+  cp obj/* $jobdir
+  cp input/* $jobdir
+  cp script/ebe.py $jobdir
+
+  # CLVisc
+  # Directories
+  for cdir in kernel eos
+  do
+    cp -r CLVisc/pyvisc/$cdir $jobdir
+  done
+
+  # Scripts
+  for scr in config backend_opencl bulkinfo smearing visc spec logo
+  do
+   cp CLVisc/pyvisc/$scr.py $jobdir
+  done
+done
+
+
+# Submit jobs
+export -f job
+seq $cores | xargs -P 0 -I{} bash -c "job '$dir'_{}"
+
+# Collect Output
+
+rm -rf $out
+
+for(( i=1; i<=cores; i++ ))
+do
+  srcdir="$dir"_$i
+  dstdir=$out/run_$i
+  mkdir -p $dstdir
+
+  mv $srcdir/input.* $dstdir
+  mv $srcdir/*.log   $dstdir
+
+  for outdir in Hydro Cascade
+  do
+    if [ -d $srcdir/$outdir ]; then mv $srcdir/$outdir $dstdir; fi
+  done
+done
+
+rm -r "$dir"_*
